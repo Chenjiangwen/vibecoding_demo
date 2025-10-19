@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抬杠机器人 - 反PUA利器</title>
+    <style>
+        /* 页面整体样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 主容器 */
+        .main-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* 标题区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1em;
+        }
+
+        /* 双栏布局 */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* 左侧 - AI回答展示区 */
+        .left-panel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            min-height: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .left-panel h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #999;
+            text-align: center;
+        }
+
+        .placeholder-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .placeholder-text {
+            font-size: 1.2em;
+        }
+
+        /* 右侧 - 控制面板 */
+        .right-panel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* 候选观点区域 */
+        .suggestions-section {
+            margin-bottom: 25px;
+        }
+
+        .category {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .category-title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-desc {
+            color: #666;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .suggestions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion-chip {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        /* 经典观点 - 绿色 */
+        .category.classic .suggestion-chip {
+            color: #4caf50;
+            border-color: #4caf50;
+        }
+
+        .category.classic .suggestion-chip:hover {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        /* 职场PUA - 橙色 */
+        .category.pua .suggestion-chip {
+            color: #ff9800;
+            border-color: #ff9800;
+        }
+
+        .category.pua .suggestion-chip:hover {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.2);
+        }
+
+        /* 反规训 - 红色 */
+        .category.anti .suggestion-chip {
+            color: #f44336;
+            border-color: #f44336;
+        }
+
+        .category.anti .suggestion-chip:hover {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2);
+        }
+
+        /* 输入区域 */
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* 按钮样式 */
+        .button-container {
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 错误提示 */
+        .error {
+            display: none;
+            background: #fee;
+            border: 2px solid #fcc;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        /* 结果展示区域 */
+        .result {
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .original-opinion {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .original-opinion h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .original-opinion p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+
+        .counter-opinions {
+            margin-bottom: 25px;
+        }
+
+        .counter-opinions h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .opinion-item {
+            background: #fff9f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff9800;
+            opacity: 0;
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .opinion-item:nth-child(1) { animation-delay: 0.1s; }
+        .opinion-item:nth-child(2) { animation-delay: 0.3s; }
+        .opinion-item:nth-child(3) { animation-delay: 0.5s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .opinion-number {
+            color: #ff9800;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .opinion-text {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+
+        /* 打字机效果 */
+        .typing {
+            border-right: 2px solid #ff9800;
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .humor {
+            background: #f0fff4;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+            opacity: 0;
+            animation: slideIn 0.5s ease-out 0.7s forwards;
+        }
+
+        .humor h3 {
+            color: #4caf50;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .humor p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1em;
+            font-style: italic;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .right-panel {
+                position: static;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .left-panel, .right-panel {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            button {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+
+        /* 滚动条美化 */
+        .left-panel::-webkit-scrollbar,
+        .right-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .left-panel::-webkit-scrollbar-track,
+        .right-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .left-panel::-webkit-scrollbar-thumb,
+        .right-panel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .left-panel::-webkit-scrollbar-thumb:hover,
+        .right-panel::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <!-- 标题区域 -->
+        <div class="header">
+            <h1>🤖 反PUA抬杠机器人</h1>
+            <p class="subtitle">职场PUA?不存在的!让AI帮你怼回去 🤪</p>
+        </div>
+
+        <!-- 双栏布局 -->
+        <div class="content-wrapper">
+            <!-- 左侧 - AI回答展示区 -->
+            <div class="left-panel">
+                <!-- 加载动画 -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>AI正在组织语言怼你...</p>
+                </div>
+
+                <!-- 错误提示 -->
+                <div class="error" id="error"></div>
+
+                <!-- 占位提示 -->
+                <div class="placeholder" id="placeholder">
+                    <div class="placeholder-icon">💬</div>
+                    <div class="placeholder-text">
+                        点击右侧候选观点,或输入你的观点<br>
+                        让AI开始抬杠吧!
+                    </div>
+                </div>
+
+                <!-- 结果展示 -->
+                <div class="result" id="result">
+                    <!-- 原始观点 -->
+                    <div class="original-opinion">
+                        <h3>📝 你的观点</h3>
+                        <p id="originalText"></p>
+                    </div>
+
+                    <!-- 反方观点 -->
+                    <div class="counter-opinions">
+                        <h3>💡 AI的反方观点</h3>
+                        <div class="opinion-item">
+                            <div class="opinion-number">观点一</div>
+                            <div class="opinion-text" id="opinion1"></div>
+                        </div>
+                        <div class="opinion-item">
+                            <div class="opinion-number">观点二</div>
+                            <div class="opinion-text" id="opinion2"></div>
+                        </div>
+                        <div class="opinion-item">
+                            <div class="opinion-number">观点三</div>
+                            <div class="opinion-text" id="opinion3"></div>
+                        </div>
+                    </div>
+
+                    <!-- 幽默回应 -->
+                    <div class="humor">
+                        <h3>😄 幽默吐槽</h3>
+                        <p id="humorText"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧 - 控制面板 -->
+            <div class="right-panel">
+                <!-- 分类候选观点 -->
+                <div class="suggestions-section">
+                    <!-- 类别1: 经典观点 -->
+                    <div class="category classic">
+                        <div class="category-title">🌟 经典观点</div>
+                        <div class="category-desc">日常生活中的常见说法</div>
+                        <div class="suggestions-container">
+                            <div class="suggestion-chip" onclick="fillSuggestion('多喝热水对身体好')">多喝热水对身体好</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('早睡早起是好习惯')">早睡早起是好习惯</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('运动有益健康')">运动有益健康</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('读书使人进步')">读书使人进步</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('钱不是万能的')">钱不是万能的</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('失败是成功之母')">失败是成功之母</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('好记性不如烂笔头')">好记性不如烂笔头</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('越努力越幸运')">越努力越幸运</div>
+                        </div>
+                    </div>
+
+                    <!-- 类别2: 职场PUA -->
+                    <div class="category pua">
+                        <div class="category-title">💼 职场PUA</div>
+                        <div class="category-desc">老板/领导常用话术</div>
+                        <div class="suggestions-container">
+                            <div class="suggestion-chip" onclick="fillSuggestion('你让我很失望')">你让我很失望</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('以你的水平出去找不到更好的工作了')">以你的水平出去找不到更好的工作了</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('离开这个平台你什么都不是')">离开这个平台你什么都不是</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('别人都能完成为什么就你不行')">别人都能完成为什么就你不行</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('你这做的叫什么玩意儿一点灵气都没有')">你这做的叫什么玩意儿一点灵气都没有</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('公司上市了期权少不了你的')">公司上市了期权少不了你的</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('我是把你当核心骨干来培养的')">我是把你当核心骨干来培养的</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('不要只看眼前工资要看能学到多少东西')">不要只看眼前工资要看能学到多少东西</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('大家都加班你一个人准时走好意思吗')">大家都加班你一个人准时走好意思吗</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('公司现在很困难全指望大家了')">公司现在很困难全指望大家了</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('你们年轻人就是吃不了苦')">你们年轻人就是吃不了苦</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('XXX对你意见很大也就是我在保你')">XXX对你意见很大也就是我在保你</div>
+                        </div>
+                    </div>
+
+                    <!-- 类别3: 反规训 -->
+                    <div class="category anti">
+                        <div class="category-title">🔥 反规训专区</div>
+                        <div class="category-desc">让社畜沉默的话术,是时候反击了!</div>
+                        <div class="suggestions-container">
+                            <div class="suggestion-chip" onclick="fillSuggestion('996是福报')">996是福报</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('年轻人就该多加班积累经验')">年轻人就该多加班积累经验</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('能者多劳不计较那么多')">能者多劳不计较那么多</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('公司给你平台你要懂得感恩')">公司给你平台你要懂得感恩</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('现在竞争这么激烈你还想准点下班')">现在竞争这么激烈你还想准点下班</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('团队需要你周末来一下')">团队需要你周末来一下</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('薪资不是最重要的成长才是')">薪资不是最重要的成长才是</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('大厂都在优化你要珍惜这份工作')">大厂都在优化你要珍惜这份工作</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('加班是为了你自己好')">加班是为了你自己好</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('公司培养你这么久该回报了')">公司培养你这么久该回报了</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('你要有主人翁精神')">你要有主人翁精神</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('不要斤斤计较格局要大')">不要斤斤计较格局要大</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('现在经济形势不好大家都不容易')">现在经济形势不好大家都不容易</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('先把工作做好再谈条件')">先把工作做好再谈条件</div>
+                            <div class="suggestion-chip" onclick="fillSuggestion('公司是你家你要当自己事')">公司是你家你要当自己事</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 输入区域 -->
+                <div class="input-section">
+                    <label for="userOpinion">或者输入其他观点:</label>
+                    <textarea
+                        id="userOpinion"
+                        placeholder="说点什么吧,让AI来抬杠 😏"
+                        maxlength="500"
+                    ></textarea>
+                </div>
+
+                <!-- 提交按钮 -->
+                <div class="button-container">
+                    <button id="submitBtn" onclick="submitOpinion()">开始抬杠 🔥</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('页面加载完成');
+
+        /**
+         * 填充候选观点到输入框
+         */
+        function fillSuggestion(text) {
+            console.log('填充观点:', text);
+            const textarea = document.getElementById('userOpinion');
+            textarea.value = text;
+            textarea.focus();
+        }
+
+        /**
+         * 打字机效果
+         */
+        function typeWriter(element, text, speed = 30) {
+            return new Promise((resolve) => {
+                element.textContent = '';
+                element.classList.add('typing');
+                let i = 0;
+
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        element.classList.remove('typing');
+                        resolve();
+                    }
+                }
+
+                type();
+            });
+        }
+
+        /**
+         * 提交用户观点,调用AI接口
+         */
+        async function submitOpinion() {
+            console.log('提交函数被调用');
+
+            // 1. 获取用户输入
+            const userInput = document.getElementById('userOpinion').value.trim();
+            console.log('用户输入:', userInput);
+
+            // 2. 验证输入
+            if (!userInput) {
+                showError('说点什么吧,不然我怎么抬杠? 🤔');
+                return;
+            }
+
+            // 3. 显示加载状态
+            showLoading();
+            hideError();
+            hideResult();
+            hidePlaceholder();
+
+            // 4. 禁用提交按钮,防止重复提交
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+
+            try {
+                console.log('开始调用API...');
+
+                // 5. 调用AI接口
+                const requestBody = {
+                    model: 'DeepSeek-V3',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `你是一个超级有个性的反PUA抬杠机器人! 🤪
+
+你的特点:
+- 毒舌但幽默,怼人有理有据
+- 擅长识破职场PUA和规训话术
+- 站在打工人角度,犀利反击
+- 语言俏皮,带点网络梗
+- 喜欢用emoji增加趣味性
+- 只针对观点,不人身攻击
+
+你的任务:
+1. 提供3个有力且有趣的反方观点,要有理有据
+2. 如果是职场PUA话术,要特别犀利地怼回去
+3. 附上一句超级搞笑的总结吐槽
+
+【非常重要】必须严格按照以下JSON格式返回,不要有任何其他文字:
+{
+  "counter_opinions": ["观点1", "观点2", "观点3"],
+  "humor_response": "吐槽句"
+}
+
+只返回这个JSON,不要有其他任何内容!`
+                        },
+                        {
+                            role: 'user',
+                            content: `观点: ${userInput}
+
+请严格按照JSON格式返回你的抬杠内容! 🔥
+
+记住:只返回JSON对象,格式如下:
+{"counter_opinions":["观点1","观点2","观点3"],"humor_response":"吐槽句"}`
+                        }
+                    ],
+                    temperature: 0.8,
+                    max_tokens: 1000
+                };
+
+                // 尝试添加response_format
+                try {
+                    requestBody.response_format = { type: "json_object" };
+                } catch (e) {
+                    console.log('不支持response_format参数');
+                }
+
+                console.log('请求体:', JSON.stringify(requestBody, null, 2));
+
+                const response = await fetch('', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                console.log('API响应状态:', response.status);
+
+                // 6. 检查响应状态
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API错误响应:', errorText);
+                    throw new Error(`服务器罢工了: ${response.status} 😅`);
+                }
+
+                // 7. 解析响应数据
+                const apiResponse = await response.json();
+                console.log('API完整响应:', apiResponse);
+
+                // 8. 从OpenAI格式响应中提取内容
+                if (!apiResponse.choices || !apiResponse.choices[0] || !apiResponse.choices[0].message) {
+                    console.error('响应格式错误:', apiResponse);
+                    throw new Error('AI居然不说话了 🤐');
+                }
+
+                const message = apiResponse.choices[0].message;
+
+                // DeepSeek-V3 特殊处理: 内容可能在 reasoning_content 或 content 字段
+                let content = message.content || message.reasoning_content;
+
+                console.log('message对象:', message);
+                console.log('content字段:', message.content);
+                console.log('reasoning_content字段:', message.reasoning_content);
+                console.log('最终使用的内容:', content);
+
+                if (!content) {
+                    console.error('content和reasoning_content都为空!', message);
+                    throw new Error('AI返回了空内容 🤐');
+                }
+
+                // 9. 多级兼容JSON解析
+                let data = null;
+
+                // 方法1: 直接解析
+                try {
+                    data = JSON.parse(content);
+                    console.log('✅ 方法1-直接解析成功:', data);
+                } catch (e1) {
+                    console.log('❌ 方法1失败,尝试方法2...');
+
+                    // 方法2: 清理markdown代码块后解析
+                    try {
+                        const cleanContent = content
+                            .replace(/```json\s*/gi, '')
+                            .replace(/```\s*/g, '')
+                            .trim();
+                        data = JSON.parse(cleanContent);
+                        console.log('✅ 方法2-清理markdown后解析成功:', data);
+                    } catch (e2) {
+                        console.log('❌ 方法2失败,尝试方法3...');
+
+                        // 方法3: 提取第一个完整的JSON对象
+                        try {
+                            const jsonMatch = content.match(/\{[\s\S]*?\}/);
+                            if (jsonMatch) {
+                                data = JSON.parse(jsonMatch[0]);
+                                console.log('✅ 方法3-提取JSON对象解析成功:', data);
+                            } else {
+                                throw new Error('未找到JSON对象');
+                            }
+                        } catch (e3) {
+                            console.log('❌ 方法3失败,尝试正则提取...');
+
+                            // 方法4: 使用正则表达式提取字段内容
+                            try {
+                                const counterOpinionsMatch = content.match(/"counter_opinions"\s*:\s*\[([\s\S]*?)\]/);
+                                const humorResponseMatch = content.match(/"humor_response"\s*:\s*"([^"]*?)"/);
+
+                                if (counterOpinionsMatch && humorResponseMatch) {
+                                    const opinionsStr = counterOpinionsMatch[1];
+                                    const opinions = [];
+                                    const opinionMatches = opinionsStr.match(/"([^"]*?)"/g);
+
+                                    if (opinionMatches) {
+                                        opinionMatches.forEach(match => {
+                                            opinions.push(match.replace(/"/g, ''));
+                                        });
+                                    }
+
+                                    const humor = humorResponseMatch[1];
+
+                                    data = {
+                                        counter_opinions: opinions,
+                                        humor_response: humor
+                                    };
+
+                                    console.log('✅ 正则提取成功:', data);
+                                } else {
+                                    throw new Error('正则提取失败');
+                                }
+                            } catch (e4) {
+                                console.error('❌ 所有解析方法都失败了!');
+                                console.error('原始内容:', content);
+                                throw new Error('AI说的话我听不懂 😵');
+                            }
+                        }
+                    }
+                }
+
+                // 10. 验证数据
+                if (!data) {
+                    throw new Error('AI返回的数据无法解析 😵');
+                }
+
+                if (!data.counter_opinions || !Array.isArray(data.counter_opinions)) {
+                    console.error('缺少counter_opinions字段:', data);
+                    throw new Error('AI返回的数据格式不对 🙄');
+                }
+
+                if (data.counter_opinions.length < 3) {
+                    console.error('反方观点不足3个:', data.counter_opinions);
+                    throw new Error('AI偷懒了,反驳不够3个 🙄');
+                }
+
+                if (!data.humor_response) {
+                    data.humor_response = '额...AI忘了吐槽了 😅';
+                }
+
+                // 11. 显示结果(带打字机效果)
+                console.log('开始显示结果');
+                await displayResultWithAnimation(userInput, data);
+
+            } catch (error) {
+                console.error('请求失败:', error);
+                showError('哎呀,AI翻车了! 😅 ' + error.message);
+            } finally {
+                hideLoading();
+                submitBtn.disabled = false;
+            }
+        }
+
+        /**
+         * 带动画效果显示结果
+         */
+        async function displayResultWithAnimation(originalOpinion, data) {
+            // 显示原始观点
+            document.getElementById('originalText').textContent = originalOpinion;
+
+            // 显示结果区域
+            showResult();
+
+            // 等待动画开始
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // 逐个显示反方观点(打字机效果)
+            await typeWriter(document.getElementById('opinion1'), data.counter_opinions[0], 20);
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            await typeWriter(document.getElementById('opinion2'), data.counter_opinions[1], 20);
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            await typeWriter(document.getElementById('opinion3'), data.counter_opinions[2], 20);
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // 显示幽默回应(打字机效果)
+            await typeWriter(document.getElementById('humorText'), data.humor_response, 25);
+
+            console.log('结果显示完成');
+        }
+
+        /**
+         * 显示加载动画
+         */
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+        }
+
+        /**
+         * 隐藏加载动画
+         */
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+
+        /**
+         * 显示错误提示
+         */
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        /**
+         * 隐藏错误提示
+         */
+        function hideError() {
+            document.getElementById('error').classList.remove('show');
+        }
+
+        /**
+         * 显示结果区域
+         */
+        function showResult() {
+            document.getElementById('result').classList.add('show');
+        }
+
+        /**
+         * 隐藏结果区域
+         */
+        function hideResult() {
+            document.getElementById('result').classList.remove('show');
+        }
+
+        /**
+         * 隐藏占位符
+         */
+        function hidePlaceholder() {
+            document.getElementById('placeholder').style.display = 'none';
+        }
+
+        /**
+         * 支持回车键提交
+         */
+        document.getElementById('userOpinion').addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                console.log('快捷键提交');
+                submitOpinion();
+            }
+        });
+
+        // 页面加载完成后聚焦输入框
+        window.addEventListener('load', function() {
+            console.log('窗口加载完成,聚焦输入框');
+            document.getElementById('userOpinion').focus();
+        });
+
+        // 测试按钮点击
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            console.log('按钮被点击了');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Anti-PUA Debate Bot - Generate intelligent counter-arguments to workplace manipulation and unreasonable statements">
+    <meta name="keywords" content="counter-arguments, workplace, PUA, debate, AI">
+    <meta name="author" content="Anti-PUA Bot">
+    <title>Anti-PUA Debate Bot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="app-title">Anti-PUA Debate Bot</h1>
+            <p class="app-subtitle">Generate intelligent counter-arguments to workplace manipulation and unreasonable statements</p>
+        </div>
+    </header>
+
+    <!-- Main Container with Dual-Panel Layout -->
+    <main class="main-container">
+        <!-- Left Panel - Results Display -->
+        <section class="left-panel results-panel" aria-label="Results Display">
+            <div class="results-header">
+                <h2>Counter-Arguments</h2>
+            </div>
+            
+            <!-- Loading State Placeholder -->
+            <div class="loading-state" id="loadingState" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Generating counter-arguments...</p>
+            </div>
+            
+            <!-- Error State Placeholder -->
+            <div class="error-state" id="errorState" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <p class="error-message" id="errorMessage"></p>
+            </div>
+            
+            <!-- Results Display Area -->
+            <div class="results-content" id="resultsContent">
+                <div class="welcome-message">
+                    <p>Enter an opinion or select a preset to get started. The AI will generate three counter-arguments and a humorous summary.</p>
+                </div>
+                
+                <!-- Original Opinion Display -->
+                <div class="original-opinion" id="originalOpinion" style="display: none;">
+                    <h3>Original Statement:</h3>
+                    <blockquote id="originalOpinionText"></blockquote>
+                </div>
+                
+                <!-- Counter-Arguments Display -->
+                <div class="counter-arguments" id="counterArguments" style="display: none;">
+                    <h3>Counter-Arguments:</h3>
+                    <ol class="arguments-list" id="argumentsList"></ol>
+                </div>
+                
+                <!-- Humor Response Display -->
+                <div class="humor-response" id="humorResponse" style="display: none;">
+                    <h3>Humorous Summary:</h3>
+                    <div class="humor-content" id="humorContent"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel - Controls -->
+        <section class="right-panel controls-panel" aria-label="Input Controls">
+            <div class="controls-header">
+                <h2>Generate Counter-Arguments</h2>
+            </div>
+            
+            <!-- Preset Opinion Categories -->
+            <div class="preset-categories">
+                <h3>Quick Select Presets:</h3>
+                
+                <!-- Classic Opinions Category -->
+                <div class="category-section classic-category">
+                    <h4 class="category-title">Classic Opinions</h4>
+                    <div class="preset-buttons" id="classicPresets">
+                        <!-- Preset buttons will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Workplace PUA Category -->
+                <div class="category-section workplace-category">
+                    <h4 class="category-title">Workplace PUA</h4>
+                    <div class="preset-buttons" id="workplacePresets">
+                        <!-- Preset buttons will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Anti-Discipline Category -->
+                <div class="category-section anti-discipline-category">
+                    <h4 class="category-title">Anti-Discipline</h4>
+                    <div class="preset-buttons" id="antiDisciplinePresets">
+                        <!-- Preset buttons will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="input-section">
+                <h3>Or Enter Your Own:</h3>
+                <form class="opinion-form" id="opinionForm">
+                    <div class="input-group">
+                        <label for="opinionInput" class="input-label">Enter an opinion to counter:</label>
+                        <textarea 
+                            id="opinionInput" 
+                            class="opinion-input" 
+                            placeholder="Type or paste an opinion here..."
+                            rows="4"
+                            maxlength="500"
+                            aria-describedby="inputHelp"
+                        ></textarea>
+                        <div class="input-help" id="inputHelp">
+                            <span class="char-count" id="charCount">0/500</span>
+                            <span class="keyboard-hint">Press Ctrl+Enter (Cmd+Enter on Mac) to submit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            Generate Counter-Arguments
+                        </button>
+                        <button type="button" class="clear-btn" id="clearBtn">
+                            Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Anti-PUA Debate Bot. Helping counter workplace manipulation with AI-powered arguments.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
